@@ -10,14 +10,9 @@ public class Solver {
 
 	public static int nearst(List<Integer> currentPosition) {
 		Integer current = currentPosition.get(currentPosition.size()-1);
-		// for (Integer i: currentPosition) {
-		// 	positions.add(i);
-		// }
 		List<Integer> positionList = new ArrayList<>(positions);
 
-		// List<Integer> list = positions.stream().distinct().collect(Collectors.toList());
 		positionList.removeAll(currentPosition);
-		// System.out.println(list);
 		int min = 500;
 		int nextPosition = 0;
 		for (Integer position: positionList) {
@@ -25,7 +20,6 @@ public class Solver {
 			if (min >= distance) {
 				min = distance;
 				nextPosition = position.intValue();
-				// System.out.println(nextPosition);
 			}
 		}
 
@@ -50,9 +44,6 @@ public class Solver {
 		}
 
 		Integer[] order = new Integer[num-1];
-
-		// Mapの数分forを回す
-		// 最短の場所を求める
 
 		order = (Integer[])currentPatern.toArray(new Integer[currentPatern.size()]);
 
