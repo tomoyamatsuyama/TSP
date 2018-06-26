@@ -60,6 +60,7 @@ public class Solver {
 			x[i] = order[i];
 		}
 
+		System.out.println(x);
 		TSP2D.submit(x);
 	}
 }
