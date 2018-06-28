@@ -1,45 +1,68 @@
-import java.util.List;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 public class Solver {
+
+	public static List<Integer> positions = new ArrayList<>();
+	public static List<Integer> yakusokus = new ArrayList<>();
+	public static List<Integer> yakusokuPositions = new ArrayList<>();
+
+	public static int nearst(List<Integer> currentPosition) {
+		Integer current = currentPosition.get(currentPosition.size()-1);
+		List<Integer> positionList = new ArrayList<>(positions);
+		positionList.removeAll(currentPosition);
+		int min = 500;
+		int nextPosition = 0;
+		for (Integer position: positionList) {
+			int distance = TSP2D.distance(current.intValue(), position.intValue());
+			if (min >= distance) {
+				min = distance;
+				nextPosition = position.intValue();
+			}
+		}
+		if (yakusokus.contains(currentPosition.size())) {
+			return Map.yakusoku[yakusokus.indexOf(currentPosition.size())][0];
+		} else {
+			return nextPosition;
+		}
+	}
+
+	public static void set(int range) {
+		int yakusokuSize = Map.yakusoku.length;
+		for (int j = 0; j < yakusokuSize; j++) {
+			yakusokuPositions.add(j, Map.yakusoku[j][0]);
+			yakusokus.add(j, Map.yakusoku[j][1]);
+		}
+
+		for (int i = 0; i < range; i++) {
+			if (!(yakusokuPositions.contains(i))) {
+				positions.add(i);
+			}
+		}
+	}
 
 	static int num = Map.p.length;
 	static int[] x = new int[num];
 	static Integer[] order = new Integer[num-1];
 
 	public static void answer() {
-		for (int i=1; i<num; i++) {
-			order[i-1] = i;
-		}
-        List<Integer> list = Arrays.asList(order);
-        Collections.shuffle(list);
-		order = (Integer[])list.toArray(new Integer[list.size()]);
-
-		x[0] = 0;
-		for (int i=1; i<num; i++) {
-			x[i] = order[i-1];
+		int num = Map.p.length;
+		set(num);
+		int[] x = new int[num];
+		List<Integer> currentPatern = new ArrayList<>();
+		currentPatern.add(0);
+		for (int i = 0; i < num -1; i++) {
+			currentPatern.add(nearst(currentPatern)); 
 		}
 
-		yakusoku();
+		Integer[] order = new Integer[num-1];
+
+		order = (Integer[])currentPatern.toArray(new Integer[currentPatern.size()]);
+		for (int i = 0; i < num; i++) {
+			x[i] = order[i];
+		}
+
 		TSP2D.submit(x);
 	}
-
-	private static void yakusoku() {
-		int tmp;
-		for(int i=0; i<Map.yakusoku.length; i++){
-			if(x[Map.yakusoku[i][1]] != Map.yakusoku[i][0]){
-				tmp = x[Map.yakusoku[i][1]];
-				for(int j=0; j<num; j++){
-					if(x[j]==Map.yakusoku[i][0]){
-						x[j]=tmp;
-					}
-				}
-				x[Map.yakusoku[i][1]]=Map.yakusoku[i][0];
-			}
-		}
-	}
-
 }
 
 
